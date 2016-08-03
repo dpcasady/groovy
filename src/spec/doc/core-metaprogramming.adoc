@@ -712,8 +712,8 @@ compilation.
 
 == Compile-time metaprogramming
 
-Compile-time metaprogramming in Groovy allows code generation at compile-time. Those transformations are altering the
-Abstract Syntax Tree (AST) of a program, which is why in Groovy we call it AST transformations. AST transformations
+Compile-time metaprogramming in Groovy allows code generation at compile-time. Those transformations alter the
+Abstract Syntax Tree (AST) of a program, which is why in Groovy we call them AST transformations. AST transformations
 allow you to hook into the compilation process, modify the AST and continue the compilation process to generate regular
 bytecode. Compared to runtime metaprogramming, this has the advantage of making the changes visible in the class file
 itself (that is to say, in the bytecode). Making it visible in the bytecode is important for example if you want the
@@ -725,7 +725,7 @@ would likely be better with compile-time metaprogramming (because no initializat
 
 In this section, we will start with explaining the various compile-time transformations that are bundled with the Groovy
 distribution. In a subsequent section, we will describe how you can <<developing-ast-xforms,implement your own AST transformations>>
-and what are the disadvantages of this technique.
+and what the disadvantages of this technique are.
 
 === Available AST transformations
 
@@ -741,12 +741,12 @@ AST transformations can be separated into two categories:
 * local AST transformations are applied by annotating the source code with markers. Unlike global AST transformations,
 local AST transformations may support parameters.
 
-Groovy doesn't ship with any global AST transformation, but you can find a list of local AST transformations
+Groovy doesn't ship with any global AST transformations, but you can find a list of local AST transformations
 available for you to use in your code here:
 
 ==== Code generation transformations
 
-This category of transformation includes AST transformations which help removing boilerplate code. This is typically
+This category of transformations includes AST transformations which help in removing boilerplate code. This is typically
 code that you have to write but that does not carry any useful information. By autogenerating this boilerplate code,
 the code you have to write is left clean and concise and the chance of introducing an error by getting such
 boilerplate code incorrect is reduced.
@@ -891,7 +891,7 @@ constructor is created having a parameter for each property (and possibly fields
 In later compilation phases, the Groovy compiler's standard default value processing behavior is then applied.
 The end result is that multiple constructors are placed within the bytecode of your class. This provides a
 well understood semantics and is also useful for Java integration purposes. As an example, the
-following code will generate 3 constructors:
+following code will generate three constructors:
 
 [source,groovy]
 ----
@@ -1335,7 +1335,7 @@ include::{projectdir}/src/spec/test/CodeGenerationASTTransformsTest.groovy[tags=
 ----
 
 The class you are creating the builder for can be any Java or Groovy class following the normal JavaBean conventions,
-e.g. a no-arg constructor and setters for the properties. Here is an example using a Java class:
+e.g. a no-argconstructor and setters for the properties. Here is an example using a Java class:
 
 [source,groovy]
 ----
@@ -2566,13 +2566,13 @@ thoroughly in this <<section-grape,section of the guide>>.
 
 There are two kinds of transformations: global and local transformations.
 
-* <<transforms-global,Global transformations>> are applied to by the compiler on the code being compiled,
-wherever the transformation apply. Compiled classes that implement global transformations
-are in a JAR added to the classpath of the compiler and contain service locator file
-`META-INF/services/org.codehaus.groovy.transform.ASTTransformation` with a line with the name of the
-transformation class. The transformation class must have a no-args constructor and implement the
+* <<transforms-global,Global transformations>> are applied by the compiler on the code being compiled,
+wherever the transformation applies. Compiled classes that implement global transformations
+are in a JAR added to the classpath of the compiler and contain a service locator file
+`META-INF/services/org.codehaus.groovy.transform.ASTTransformation` with a line containaing the name of the
+transformation class. The transformation class must have a no-arg constructor and implement the
 `org.codehaus.groovy.transform.ASTTransformation` interface.
-It will be run against *every source in the compilation*, so be sure to not create transformations which
+It will be run against *every source in the compilation*, so be sure not to create transformations which
 scan all the AST in an expansive and time-consuming manner, to keep the compiler fast.
 * <<transforms-local,Local transformations>> are transformations applied locally by annotating code elements you want to
 transform. For this, we reuse the annotation notation, and those annotations should implement
@@ -2653,7 +2653,7 @@ include::{projectdir}/src/spec/test/metaprogramming/ASTXFormSpecTest.groovy[tags
 ----
 
 The annotation retention can be `SOURCE` because you won’t need the annotation
-past that. The element type here is `METHOD`, the `@WithLogging` because the annotation
+past that. The element type here for `@WithLogging` is `METHOD` because the annotation
 applies to methods.
 
 But the most important part is the
@@ -2681,14 +2681,14 @@ because it will improve performance of the compiler.
 transform needs to run. Here, it's at the _semantic analysis_ phase.
 <3> implement the `ASTTransformation` interface
 <4> which only has a single `visit` method
-<5> the `nodes` parameter is a 2 AST node array, for which the first one is the annotation node (`@WithLogging`) and
+<5> the `nodes` parameter is a two AST node array, for which the first one is the annotation node (`@WithLogging`) and
 the second one is the annotated node (the method node)
 <6> create a statement that will print a message when we enter the method
 <7> create a statement that will print a message when we exit the method
 <8> get the method body, which in this case is a `BlockStatement`
 <9> add the enter method message before the first statement of existing code
 <10> append the exit method message after the last statement of existing code
-<11> creates an `ExpressionStatement` wrapping a `MethodCallExpression` corresponding to `this.println("message")`
+<11> create an `ExpressionStatement` wrapping a `MethodCallExpression` corresponding to `this.println("message")`
 
 It is important to notice that for the brevity of this example, we didn't make the necessary checks, such as checking
 that the annotated node is really a `MethodNode`, or that the method body is an instance of `BlockStatement`. This
@@ -2721,7 +2721,7 @@ Ending greet
 NOTE: It is important to note that an AST transformation participates directly in the compilation process. A common
 error by beginners is to have the AST transformation code in the same source tree as a class that uses the transformation.
 Being in the same source tree in general means that they are compiled at the same time. Since the transformation itself
-is going to be compiled in phases and that each compile phase processes all files of the same source unit before going
+is going to be compiled in phases and each compile phase processes all files of the same source unit before going
 to the next one, there's a direct consequence: the transformation will not be compiled before the class that uses it! In
 conclusion, AST transformations need to be precompiled before you can use them. In general, it is as easy as having them
 in a separate source tree.
@@ -2729,9 +2729,9 @@ in a separate source tree.
 [[transforms-global]]
 ==== Global transformations
 
-Global AST transformation are similar to local one with a major difference: they do not need an annotation, meaning that
+Global AST transformations are similar to local ones with a major difference: they do not need an annotation, meaning that
 they are applied _globally_, that is to say on each class being compiled. It is therefore very important to limit their
-use to last resort, because it can have a significant impact on the compiler performance.
+usage as a last resort, because it can have a significant impact on the compiler performance.
 
 Following the example of the <<transform-local, local AST transformation>>, imagine that we would like to trace all
 methods, and not only those which are annotated with `@WithLogging`. Basically, we need this code to behave the same
@@ -2747,7 +2747,7 @@ To make this work, there are two steps:
 . create the `org.codehaus.groovy.transform.ASTTransformation` descriptor inside the `META-INF/services` directory
 . create the `ASTTransformation` implementation
 
-The descriptor file is required and must be found on classpath. It will contain a single line:
+The descriptor file is required and must be found on the classpath. It will contain a single line:
 
 [source,groovy]
 .META-INF/services/org.codehaus.groovy.transform.ASTTransformation
@@ -2777,7 +2777,7 @@ and retrieve the list of methods from this file
 <9> get the method body, which in this case is a `BlockStatement`
 <10> add the enter method message before the first statement of existing code
 <11> append the exit method message after the last statement of existing code
-<12> creates an `ExpressionStatement` wrapping a `MethodCallExpression` corresponding to `this.println("message")`
+<12> create an `ExpressionStatement` wrapping a `MethodCallExpression` corresponding to `this.println("message")`
 
 ==== AST API guide
 ===== AbstractASTTransformation
